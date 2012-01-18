@@ -1,4 +1,5 @@
 This project allows converting from the Confluence Wiki format and RST (Restructured Text).
 
-It's implemented in Python and may not include full support (it's being done to provide a way to keep the PyDev homepage updated from its wiki contents).
+It's implemented in Python and may not include full support to the whole Wiki nor RST formats
+(it's being done to provide a way to keep the PyDev homepage updated from its wiki contents).
 
