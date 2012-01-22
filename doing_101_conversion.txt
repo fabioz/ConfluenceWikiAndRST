@@ -1,0 +1,38 @@
+Getting Started 		manual_101_root -- OK
+Install 		manual_101_install -- OK
+Interpreter Configuration 		manual_101_interpreter -- OK
+Project Creation 		manual_101_project_conf -- OK
+Project Configuration 		manual_101_project_conf2 -- OK
+Module Creation 		manual_101_first_module -- OK
+Running a program 		manual_101_run -- OK
+Configuring Eclipse 		manual_101_eclipse -- OK
+Useful tips 		manual_101_tips -- OK
+
+
+
+OK -- Skipping:  Features 		W:/pydev/plugins/com.python.pydev.docs/merged_homepage\manual_adv_features.contents.rst
+OK -- Unittest integration 		manual_adv_pyunit
+OK -- Interactive Console 		manual_adv_interactive_console
+OK -- Editor preferences 		manual_adv_editor_prefs
+OK -- Launching 		manual_adv_launch
+OK -- Skipping:  Mark Occurrences 		W:/pydev/plugins/com.python.pydev.docs/merged_homepage\manual_adv_markoccurrences.contents.rst
+OK -- Skipping:  Rename Occurrences 		W:/pydev/plugins/com.python.pydev.docs/merged_homepage\manual_adv_renameoccurrences.contents.rst
+OK -- Skipping:  Refactoring 		W:/pydev/plugins/com.python.pydev.docs/merged_homepage\manual_adv_refactoring.contents.rst
+OK -- Skipping:  Content Assistants 		W:/pydev/plugins/com.python.pydev.docs/merged_homepage\manual_adv_assistants.contents.rst
+OK -- Code Coverage 		manual_adv_coverage
+OK -- Skipping:  Tasks 		W:/pydev/plugins/com.python.pydev.docs/merged_homepage\manual_adv_tasks.contents.rst
+OK -- Skipping:  Code Analysis 		W:/pydev/plugins/com.python.pydev.docs/merged_homepage\manual_adv_code_analysis.contents.rst
+OK -- Skipping:  PyLint 		W:/pydev/plugins/com.python.pydev.docs/merged_homepage\manual_adv_pylint.contents.rst
+OK -- Skipping:  Quick Outline 		W:/pydev/plugins/com.python.pydev.docs/merged_homepage\manual_adv_quick_outline.contents.rst
+OK -- Skipping:  Open Declaration Quick Outline 		W:/pydev/plugins/com.python.pydev.docs/merged_homepage\manual_adv_open_decl_quick.contents.rst
+OK -- Skipping:  Go to Definition 		W:/pydev/plugins/com.python.pydev.docs/merged_homepage\manual_adv_gotodef.contents.rst
+OK -- Skipping:  Hierachy View 		W:/pydev/plugins/com.python.pydev.docs/merged_homepage\manual_adv_hierarchy_view.contents.rst
+OK -- Skipping:  Templates completion 		W:/pydev/plugins/com.python.pydev.docs/merged_homepage\manual_adv_compltemp.contents.rst
+OK -- Context-sensitive completions 		manual_adv_complctx
+OK -- Skipping:  Context-insensitive completions 		W:/pydev/plugins/com.python.pydev.docs/merged_homepage\manual_adv_complnoctx.contents.rst
+OK -- Skipping:  Auto-suggest keywords 		W:/pydev/plugins/com.python.pydev.docs/merged_homepage\manual_adv_complauto.contents.rst
+OK -- Skipping:  Debugger 		W:/pydev/plugins/com.python.pydev.docs/merged_homepage\manual_adv_debugger.contents.rst
+OK -- Remote Debugger 		manual_adv_remote_debugger
+OK -- Skipping:  Debug Console 		W:/pydev/plugins/com.python.pydev.docs/merged_homepage\manual_adv_debug_console.contents.rst
+OK -- Django 		manual_adv_django
+OK -- Skipping:  Jython Scripting 		W:/pydev/plugins/com.python.pydev.docs/merged_homepage\manual_articles_scripting.contents.rst

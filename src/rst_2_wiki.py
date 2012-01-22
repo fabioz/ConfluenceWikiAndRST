@@ -161,7 +161,37 @@ class ConvertRstToWiki(object):
 
     
     
+    def _DoInitialReplacements(self):
+        '''
+        Replace 'foo' by the associated tag value
+        '''
+        re_definition = re.compile(r'(\s)*\.\.(\s)*\|((\w|\s|:|/|\.)+)\|(.*)')
+        replacements = {}
+        i = -1
+        while i < self._line_count - 1:
+            i += 1
+            line = self._lines[i]
+            stripped = line.strip()
+            if stripped.startswith('..'):
+                if stripped[2:].strip().startswith('|'):
+                    match = re_definition.match(stripped)
+                    if match:
+                        replacements['|%s|' % match.group(3).strip()] = '.. '+ match.group(5).strip()
+                        self._lines[i] = ''
+        
+        
+        i = -1
+        while i < self._line_count - 1:
+            i += 1
+            line = self._lines[i]
+            for key, val in replacements.iteritems():
+                line = line.replace(key, val)
+            self._lines[i] = line
+                    
+        
+    
     def Convert(self):
+        self._DoInitialReplacements()
         self._output_lines = []
         
         i = -1
@@ -170,6 +200,7 @@ class ConvertRstToWiki(object):
             line = self._lines[i]
             
             if line.strip() == '.. contents::':
+#                self._output_lines.append('{toc:style=circle|minLevel=1|maxLevel=5}')
                 continue
             
             match = self._re_link_definition.match(line)

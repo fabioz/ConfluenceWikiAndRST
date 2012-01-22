@@ -190,6 +190,29 @@ _`my link`
 
 h1. {anchor: my link}my link'''
         self.assertEqual(expected, convert.Convert())
+
+        
+    def testContents(self):
+        convert = rst_2_wiki.ConvertRstToWiki("""
+.. contents::
+""")
+        
+
+        expected = '''
+{toc:style=circle|minLevel=1|maxLevel=5}'''
+        self.assertEqual(expected, convert.Convert())
+        
+    def testReplace(self):
+        convert = rst_2_wiki.ConvertRstToWiki("""
+|repl|
+.. |repl| foo
+""")
+        
+
+        expected = '''
+.. foo
+'''
+        self.assertEqual(expected, convert.Convert())
         
         
 #=======================================================================================================================
