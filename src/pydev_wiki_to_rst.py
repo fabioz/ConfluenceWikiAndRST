@@ -99,6 +99,36 @@ class Executer(object):
         print self.server_proxy.confluence1.getSpaces(self.auth)
 
     
+    def ConvertCodeToHtml(self, code):
+        from pygments import highlight
+        from pygments.lexers import get_lexer_by_name
+        from pygments.formatters import get_formatter_by_name
+        lexer = get_lexer_by_name('python')
+        formatter = get_formatter_by_name('html', noclasses=True)
+        return highlight(code, lexer, formatter)
+    
+    
+    def _ConvertInCode(self, title, contents, start, end, convert_code_to_html):
+        i_start = contents.find(start)
+        found = 0
+        while i_start >= 0:
+            i_end = contents.find(end, i_start+len(start))
+            if i_end >= 0:
+                found += 1
+                converted = convert_code_to_html(contents[i_start+len(start):i_end])
+                contents = list(contents)
+                contents[i_start:i_end+len(end)] = converted
+                contents = ''.join(contents)
+                i_start = contents.find(start)
+            else:
+                break
+                
+        #Just a quick check as we know that this page has some code, to make sure that we got it.
+        if 'Django' in title:
+            assert found > 0, 'Found: %s' % (found,)
+        return contents
+    
+    
     def ConvertToPyDev(self):
         base = r'W:/pydev/plugins/com.python.pydev.docs/'
         
@@ -205,11 +235,22 @@ class Executer(object):
                         replacement = 'https://wiki.appcelerator.org/display/tis/Changing+the+Update+Type'
                     else:
                         print 'Available:\n'+('\n'.join(sorted(urls_replacement.iterkeys())))
-                            
                         raise
                 contents[start:end] = replacement 
                 contents = ''.join(contents)
                 match = link_re.search(contents)
+
+
+            #Now, deal with code-samples
+            contents = self._ConvertInCode(
+                title,
+                contents,
+                '<script type="syntaxhighlighter" class="theme: Default; brush: python; gutter: false"><![CDATA[', 
+                ']]></script>', 
+                self.ConvertCodeToHtml
+            )
+                
+                
                 
             
             contents = contents.replace('<body>', '<contents_area>').replace('</body>', '</contents_area>')
