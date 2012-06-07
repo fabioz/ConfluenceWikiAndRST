@@ -12,9 +12,10 @@ class ConvertRstToWiki(object):
     def __init__(self, contents):
         self._content = contents
         self._lines = contents.splitlines()
-        self._re_inline_emphasis = re.compile(r'\*([^*]*)\*')
-        self._re_inline_strong = re.compile(r'\*\*([^*]*)\*\*')
+        self._re_inline_emphasis = re.compile(r'\*([^ ]+[^*]*[^ ])\*')
+        self._re_inline_strong = re.compile(r'\*\*([^ ]+[^*]*[^ ])\*\*')
         self._re_inline_literal = re.compile(r'``([^`]*)``')
+        self._re_inline_link = re.compile(r'`([^ ]+[^`]*[^ ]+) <([^> ]*)>`_')
         self._re_link_definition = re.compile(r'(\s)*\.\.(\s)*_(`)?((\w|\s|:|/|\.)*)(`)?:(.*)')
         self._re_link_definition1 = re.compile(r'(\s)*\.\.(\s)*_(`)((\w|\s|:|/|\.)*)(`):(.*)')
         self._re_link_use = re.compile(r'`((\w|\s|:|/|\.)*)`_')
@@ -285,6 +286,19 @@ class ConvertRstToWiki(object):
                 line = ''.join(chars)
                 match = self._re_link_use.search(line, match.start() + len(lst))
         return line
+
+    def _ConvertInlineLinks(self, line):
+        match = self._re_inline_link.search(line)
+        inline_link_start_mark_len = len('`')
+        inline_link_end_mark_len = len('>`_')
+        while match is not None:
+            line = "%s[%s|%s]%s" % \
+                            (line[:match.start()],
+                             match.group(1),
+                             match.group(2),
+                             line[match.end():])
+            match = self._re_inline_link.search(line, match.end())
+        return line
     
 
     
@@ -391,6 +405,7 @@ class ConvertRstToWiki(object):
                 line = self._ConvertInlineLiterals(line)
                 line = self._ConvertInlineStrongAndEmphasis(line)
                 line = self._ConvertLineLinks(line)
+                line = self._ConvertInlineLinks(line)
                     
                 
                 self._output_lines.append(line)
