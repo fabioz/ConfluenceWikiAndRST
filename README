@@ -6,7 +6,7 @@ License: GPL 3
 It's target is doing a one-off conversion of the PyDev homepage to a wiki
 (http://pydev.org -> https://wiki.appcelerator.org/display/tis/Python+Development 
 -- so, that's the subset it must implement, but having a few manual edits afterwards 
-are acceptable). 
+is acceptable). 
 
 At this point, the conversion from RST -> wiki is already finished and there are no plans for
 more improvements in this area, however, as this may be useful for others, the code is 
