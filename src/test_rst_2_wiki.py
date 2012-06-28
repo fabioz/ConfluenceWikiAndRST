@@ -71,13 +71,24 @@ The first step for that is downloading the `PyDev c`_.
     
     def testImage(self):
         convert = rst_2_wiki.ConvertRstToWiki('''
-.. image:: images/update_sites.png
+.. image :: images/update_sites.png
    :class: snap
    :align: center 
 ''')
         self.assertEqual('\n!http://pydev.org/images/update_sites.png|border=1!', convert.Convert())
         
         
+    def testFigure(self):
+        convert = rst_2_wiki.ConvertRstToWiki('''
+.. figure:: images/myfigure.png
+   :target: _images/myfigure.png
+   :scale: 85
+   :alt: Figure X-Y. Figure description
+
+   Figure X-Y. Figure description
+''')
+        self.assertEqual('\n!http://pydev.org/images/myfigure.png|border=1!', convert.Convert())
+
     def testLinkToLink(self):
         convert = rst_2_wiki.ConvertRstToWiki('''
 .. _http://link: http://link
@@ -200,7 +211,8 @@ h1. {anchor: my link}my link'''
 
         expected = '''
 {toc:style=circle|minLevel=1|maxLevel=5}'''
-        self.assertEqual(expected, convert.Convert())
+        converted = convert.Convert()
+        self.assertEqual(expected, converted, "Actual: %s" % converted)
         
     def testReplace(self):
         convert = rst_2_wiki.ConvertRstToWiki("""
@@ -215,6 +227,66 @@ h1. {anchor: my link}my link'''
         self.assertEqual(expected, convert.Convert())
         
         
+    def testNoteBlock(self):
+        convert = rst_2_wiki.ConvertRstToWiki('''
+.. note :: Note title
+
+    Note first line
+    Note second line
+''')
+        self.assertEqual('\n{note:title=Note title}\n\n\n    Note first line\n    Note second line\n{note}', convert.Convert())
+
+
+    def testCautionBlock(self):
+        convert = rst_2_wiki.ConvertRstToWiki('''
+.. caution:: Caution notice
+
+    Caution first line
+    Caution second line
+''')
+        self.assertEqual('\n{warning:title=Caution notice}\n\n\n    Caution first line\n    Caution second line\n{warning}', convert.Convert())
+
+
+    def testSphinxIndexBlock(self):
+        convert = rst_2_wiki.ConvertRstToWiki('''
+.. index::
+
+   single: eggs; installation
+''')
+        self.assertEqual('', convert.Convert())
+
+
+    def testInlineLiteral(self):
+        convert = rst_2_wiki.ConvertRstToWiki('''
+This is line with inline literals ``PATH``.
+A Path: ``/etc/hosts`` and another ``?``inline
+``foo1=bar1&foo2=bar2`` qwerty ``environ()``
+
+''')
+        self.assertEqual('\nThis is line with inline literals {{PATH}}.\nA Path: {{/etc/hosts}} and another {{?}}inline\n{{foo1=bar1&foo2=bar2}} qwerty {{environ()}}\n', convert.Convert())
+
+
+    def testInlineEmphasisAndStrong(self):
+        convert = rst_2_wiki.ConvertRstToWiki('''
+Inline *emphasis* and inline **strong**.
+More **about strong and** more about *emphasis markers*
+Two *emphasis* entries, same *line*, doh!
+Two **strong** in same **line**, doh!
+
+''')
+        self.assertEqual('\nInline _emphasis_ and inline *strong*.\nMore *about strong and* more about _emphasis markers_\nTwo _emphasis_ entries, same _line_, doh!\nTwo *strong* in same *line*, doh!\n', convert.Convert())
+
+
+    def testInlineLinks(self):
+        convert = rst_2_wiki.ConvertRstToWiki('''
+* `Link text1 <http://example.net/>`_ some text
+* `Link text2 <http://example.biz/>`_ some text
+* `Link3 <http://example.org/>`_ and `Link4 <http://example.com/>`_
+
+''')
+        self.assertEqual('\n* [Link text1|http://example.net/] some text\n* [Link text2|http://example.biz/] some text\n* [Link3|http://example.org/] and [Link4|http://example.com/]\n', convert.Convert())
+
+
 #=======================================================================================================================
 # main
 #=======================================================================================================================
