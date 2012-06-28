@@ -9,10 +9,10 @@ It's target is doing a one-off conversion of the PyDev homepage to a wiki
 are acceptable). 
 
 At this point, the conversion from RST -> wiki is already finished and there are no plans for
-more improvements in this area, however, as this may be useful for others, the code is available in 
-GPL 3 and patches are welcome (just note that test cases are required for any new features added
--- as I won't be running the code to really check things again, please test extensively before 
-submitting a patch).
+more improvements in this area, however, as this may be useful for others, the code is available
+in GPL 3 and patches are welcome (just note that test cases are required for any new features 
+added -- as I won't be running the code to really check things again, please test extensively 
+before submitting a patch).
 
 The code which updates the PyDev homepage from the generated wiki is available, but it uses
 mostly the confluence API to get pages directly as HTML and just pre-processes it as needed
