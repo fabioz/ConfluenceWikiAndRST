@@ -1,6 +1,11 @@
-#Convert rst content to confluence wiki content
+'''
+Convert rst content to confluence wiki content
 
-import os.path 
+Use: 
+    wiki_content_as_string = ConvertRstToWiki(rst_content_as_string).Convert()
+'''
+
+import os.path
 import re
 
 
@@ -8,7 +13,7 @@ import re
 # ConvertRstToWiki
 #=======================================================================================================================
 class ConvertRstToWiki(object):
-    
+
     def __init__(self, contents):
         self._content = contents
         self._lines = contents.splitlines()
@@ -39,8 +44,8 @@ class ConvertRstToWiki(object):
         self._line_count = len(self._lines)
         self._images_prefix = 'http://pydev.org/'
         self._finishing_operations = []
-        
-    
+
+
     def _ContainsOnlySameChar(self, line):
         stripped = line.strip()
         if len(stripped) == 0:
@@ -52,19 +57,19 @@ class ConvertRstToWiki(object):
                     return False
             old = c
         return True
-    
-    
+
+
     def _GetFirstNonWhiteSpaceIndex(self, line):
         for i in xrange(len(line)):
             if line[i] != ' ' and line[i] != '\t':
                 return i
         return -1
-    
-    
+
+
     def _SkipCommentBlock(self, i):
         line = self._lines[i]
         ignore_until_indentation_lower_than = self._GetFirstNonWhiteSpaceIndex(line)
-        
+
         while i < self._line_count - 1:
             i += 1
             line = self._lines[i]
@@ -75,28 +80,28 @@ class ConvertRstToWiki(object):
                 continue
             else:
                 return i - 1
-            
+
         return i
-    
+
 
     def _HandleRawBlock(self, i):
         start = i
         end = self._SkipCommentBlock(i)
-        
+
         line = '{quote}\n'
-        for i in xrange(start+1, end+1):
-            line += '\n' +self._lines[i]
+        for i in xrange(start + 1, end + 1):
+            line += '\n' + self._lines[i]
         line += '\n{quote}'
-        
+
         self._output_lines.append(line)
         return end
-    
-    
+
+
 
     def _HandleImage(self, i):
         start = i
         end = self._SkipCommentBlock(i)
-        
+
         # WORKAROUND: drop spaces between directive type and the two colons
         dir_line = self._lines[start]
         bad_dir_match = re.search("(\s)+\:\:", dir_line)
@@ -108,18 +113,18 @@ class ConvertRstToWiki(object):
         # In the normalized line, 'match.group(5)' points to the image file
         url = self._images_prefix + match.group(5).strip()
         self._output_lines.append('!%s|border=1!' % url)
-        
+
         return end
-        
+
     def _HandleSourceCode(self, i):
         start = i
         end = self._SkipCommentBlock(i)
-        
+
         line = '{code:language=python}\n'
-        for i in xrange(start+1, end+1):
-            line += '\n' +self._lines[i]
+        for i in xrange(start + 1, end + 1):
+            line += '\n' + self._lines[i]
         line += '\n{code}'
-        
+
         self._output_lines.append(line)
         return end
 
@@ -185,18 +190,18 @@ class ConvertRstToWiki(object):
 
         self._output_lines.append(line)
         return end
-        
-            
-    
+
+
+
     def _HandleTable(self, i):
         start = i
         end = self._SkipCommentBlock(i)
-        
-        
+
+
 #        match = self._re_start_image.match(self._lines[i])
 #        url = self._images_prefix+match.group(3).strip()
 #        self._output_lines.append('!%s|border=1!' % url)
-        
+
         content = '||%s' % self._lines[i].strip()[1:] #Remove the initial ':'
         #Contents of the image (ignored for now).
         for i in xrange(start + 1, end + 1):
@@ -205,19 +210,19 @@ class ConvertRstToWiki(object):
             if len(stripped) == 0:
                 continue
             content += ('|' + self._ConvertLineLinks(line))
-        
+
         content += '||'
         self._output_lines.append(content)
-        
+
         return end
-    
-    
+
+
     def _CreateAnchorCallable(self, group, link):
         def FinishAnchor(content):
             return content.replace(link, '{anchor: %s}%s' % (group, group))
         self._finishing_operations.append(FinishAnchor)
-    
-    
+
+
     def _ConvertInlineLiterals(self, line):
         # Inline literal, from ``literal`` to {{literal}}
         literal_marker_len = len('``')  # 2, using len() to clarify only
@@ -270,18 +275,18 @@ class ConvertRstToWiki(object):
                 if inner_link in self._content:
                     lst = list('[#' + group + ']')
                     chars[match.start():match.end()] = lst
-                    
+
                     #Redo the line for the next search
                     line = ''.join(chars)
                     match = self._re_link_use.search(line, match.start() + len(lst))
                     self._CreateAnchorCallable(group, inner_link)
-                    
+
                 else:
                     raise AssertionError('Could not find: %s in %s.\nFor line: %s' % (group, self._links, line))
             else:
                 lst = list('[' + group + '|' + link + ']')
                 chars[match.start():match.end()] = lst
-                
+
                 #Redo the line for the next search
                 line = ''.join(chars)
                 match = self._re_link_use.search(line, match.start() + len(lst))
@@ -299,10 +304,10 @@ class ConvertRstToWiki(object):
                              line[match.end():])
             match = self._re_inline_link.search(line, match.end())
         return line
-    
 
-    
-    
+
+
+
     def _DoInitialReplacements(self):
         '''
         Replace 'foo' by the associated tag value
@@ -318,10 +323,10 @@ class ConvertRstToWiki(object):
                 if stripped[2:].strip().startswith('|'):
                     match = re_definition.match(stripped)
                     if match:
-                        replacements['|%s|' % match.group(3).strip()] = '.. '+ match.group(5).strip()
+                        replacements['|%s|' % match.group(3).strip()] = '.. ' + match.group(5).strip()
                         self._lines[i] = ''
-        
-        
+
+
         i = -1
         while i < self._line_count - 1:
             i += 1
@@ -329,22 +334,22 @@ class ConvertRstToWiki(object):
             for key, val in replacements.iteritems():
                 line = line.replace(key, val)
             self._lines[i] = line
-                    
-        
-    
+
+
+
     def Convert(self):
         self._DoInitialReplacements()
         self._output_lines = []
-        
+
         i = -1
         while i < self._line_count - 1:
             i += 1
             line = self._lines[i]
-            
+
             if line.strip() == '.. contents::':
                 self._output_lines.append('{toc:style=circle|minLevel=1|maxLevel=5}')
                 continue
-            
+
             match = self._re_link_definition.match(line)
             if match is not None:
                 if '`' in line:
@@ -362,10 +367,10 @@ class ConvertRstToWiki(object):
                     except:
                         raise AssertionError('Wrong format for link (should probably have surrounding char: >>`<<): %s' % (line,))
                     key = key[1:-1] #Remove _***:
-                    
+
                 self._links[key] = val
                 #print self._links 
-            
+
             elif self._ContainsOnlySameChar(line):
                 stripped = line.strip()
                 if stripped == '..':
@@ -374,42 +379,42 @@ class ConvertRstToWiki(object):
                 elif stripped == '::':
                     i = self._HandleRawBlock(i)
                     continue
-                
+
                 prev_line = self._output_lines[-1]
                 self._output_lines[-1] = 'h1. ' + prev_line
-                
+
             else:
                 stripped = line.strip()
                 if stripped.startswith('..'):
                     if self._re_start_image.match(line):
                         i = self._HandleImage(i)
                         continue
-                    
+
                     elif self._re_start_sourcecode.match(line):
                         i = self._HandleSourceCode(i)
                         continue
-                    
+
                     # Additional handlers
                     elif self._re_start_admonition.match(line):
                         i = self._HandleAdmonition(i)
                         continue
-                    
+
                     elif self._re_start_sphinx_index.match(line):
                         i = self._HandleSphinxIndex(i)
                         continue
-                    
+
                 elif stripped.startswith(':'):
                     i = self._HandleTable(i)
                     continue
-                    
+
                 line = self._ConvertInlineLiterals(line)
                 line = self._ConvertInlineStrongAndEmphasis(line)
                 line = self._ConvertLineLinks(line)
                 line = self._ConvertInlineLinks(line)
-                    
-                
+
+
                 self._output_lines.append(line)
-        
+
         ret = '\n'.join(self._output_lines).replace(r'\\', '/')
         for op in self._finishing_operations:
             ret = op(ret)

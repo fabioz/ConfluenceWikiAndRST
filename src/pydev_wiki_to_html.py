@@ -1,3 +1,7 @@
+'''
+Used to convert the PyDev Wiki to the format required in the PyDev homepage (HTML)
+'''
+
 import xmlrpclib
 import os
 import httplib

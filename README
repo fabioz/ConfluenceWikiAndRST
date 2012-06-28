@@ -1,5 +1,19 @@
-This project allows converting from the Confluence Wiki format and RST (Restructured Text).
+This project allows converting from RST (Restructured Text) to the Confluence Wiki format
+(and Confluence Wiki format to HTML)
 
-It's implemented in Python and may not include full support to the whole Wiki nor RST formats
-(it's being done to provide a way to keep the PyDev homepage updated from its wiki contents).
+License: GPL 3
 
+It's target is doing a one-off conversion of the PyDev homepage to a wiki
+(http://pydev.org -> https://wiki.appcelerator.org/display/tis/Python+Development 
+-- so, that's the subset it must implement, but having a few manual edits afterwards 
+are acceptable). 
+
+At this point, the conversion from RST -> wiki is already finished and there are no plans for
+more improvements in this area, however, as this may be useful for others, the code is available in 
+GPL 3 and patches are welcome (just note that test cases are required for any new features added
+-- as I won't be running the code to really check things again, please test extensively before 
+submitting a patch).
+
+The code which updates the PyDev homepage from the generated wiki is available, but it uses
+mostly the confluence API to get pages directly as HTML and just pre-processes it as needed
+to generate the PyDev homepage. 

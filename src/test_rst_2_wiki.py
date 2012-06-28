@@ -6,8 +6,8 @@ import os.path
 # TestCase
 #=======================================================================================================================
 class TestCase(unittest.TestCase):
-    
-    
+
+
 #    def testDocutils(self):
 #        from docutils import core
 #        
@@ -29,7 +29,7 @@ class TestCase(unittest.TestCase):
 #                )
 #                print ret
 
-    
+
     def testIgnore(self):
         convert = rst_2_wiki.ConvertRstToWiki('''
 ..
@@ -40,8 +40,8 @@ add this
 ========
 ''')
         self.assertEqual('\nh1. add this', convert.Convert())
-        
-        
+
+
     def testConversion2(self):
         convert = rst_2_wiki.ConvertRstToWiki('''
 .. _`Aptana Studio 3`: http://aptana.com/products/studio3
@@ -49,8 +49,8 @@ add this
 bla `Aptana Studio 3`_ bla
 ''')
         self.assertEqual('\n\nbla [Aptana Studio 3|http://aptana.com/products/studio3] bla', convert.Convert())
-        
-        
+
+
     def testConversion3(self):
         convert = rst_2_wiki.ConvertRstToWiki('''
 .. _`A`: http://aa
@@ -58,8 +58,8 @@ bla `Aptana Studio 3`_ bla
 b `A`_ b `A`_ b
 ''')
         self.assertEqual('\n\nb [A|http://aa] b [A|http://aa] b', convert.Convert())
-        
-        
+
+
     def testConversion4(self):
         convert = rst_2_wiki.ConvertRstToWiki('''
 .. _`PyDev c`: pydev_certificate.cer
@@ -67,8 +67,8 @@ b `A`_ b `A`_ b
 The first step for that is downloading the `PyDev c`_.
 ''')
         self.assertEqual('\n\nThe first step for that is downloading the [PyDev c|pydev_certificate.cer].', convert.Convert())
-        
-    
+
+
     def testImage(self):
         convert = rst_2_wiki.ConvertRstToWiki('''
 .. image :: images/update_sites.png
@@ -76,8 +76,8 @@ The first step for that is downloading the `PyDev c`_.
    :align: center 
 ''')
         self.assertEqual('\n!http://pydev.org/images/update_sites.png|border=1!', convert.Convert())
-        
-        
+
+
     def testFigure(self):
         convert = rst_2_wiki.ConvertRstToWiki('''
 .. figure:: images/myfigure.png
@@ -94,16 +94,16 @@ The first step for that is downloading the `PyDev c`_.
 .. _http://link: http://link
 `http://link`_''')
         self.assertEqual('\n[http://link|http://link]', convert.Convert())
-        
-        
+
+
     def testLinkToLink2(self):
         convert = rst_2_wiki.ConvertRstToWiki('''
 .. _http://pydev.org/updates: http://pydev.org/updates
 `http://pydev.org/updates`_''')
         self.assertEqual('\n[http://pydev.org/updates|http://pydev.org/updates]', convert.Convert())
-        
-        
-        
+
+
+
     def testBlock(self):
         convert = rst_2_wiki.ConvertRstToWiki('''
 ::
@@ -111,7 +111,7 @@ The first step for that is downloading the `PyDev c`_.
     something
 ''')
         self.assertEqual('\n{quote}\n\n    something\n    something\n{quote}', convert.Convert())
-        
+
     def testBlock2(self):
         convert = rst_2_wiki.ConvertRstToWiki('''
 such as:
@@ -119,8 +119,8 @@ such as:
         An error
 ''')
         self.assertEqual('\nsuch as:\n{quote}\n\n        An error\n{quote}', convert.Convert())
-        
-        
+
+
     def testTable(self):
         convert = rst_2_wiki.ConvertRstToWiki('''
 :A:
@@ -130,15 +130,15 @@ such as:
 
     itemB
 ''')
-        
+
 
         expected = '''
 ||A:|    itemA||
 ||B:|    itemB||'''
 
         self.assertEqual(expected, convert.Convert())
-        
-        
+
+
     def testTableWithLinks(self):
         convert = rst_2_wiki.ConvertRstToWiki('''
 .. _`itemA`: http://aa
@@ -146,15 +146,15 @@ such as:
 :A:
     `itemA`_
 ''')
-        
+
 
         expected = '''
 
 ||A:|    [itemA|http://aa]||'''
 
         self.assertEqual(expected, convert.Convert())
-        
-        
+
+
     def testCodeBlock(self):
         convert = rst_2_wiki.ConvertRstToWiki('''
 .. sourcecode:: python
@@ -162,11 +162,11 @@ such as:
     a = 10
     b = 20
 ''')
-        
+
 
 
         self.assertEqual('\n{code:language=python}\n\n\n    a = 10\n    b = 20\n{code}', convert.Convert())
-        
+
     def testCodeBlock2(self):
         convert = rst_2_wiki.ConvertRstToWiki("""
     .. sourcecode:: python
@@ -174,7 +174,7 @@ such as:
         a = 10
         b = 20
 """)
-        
+
 
         expected = '''
 {code:language=python}
@@ -184,9 +184,9 @@ such as:
         b = 20
 {code}'''
         self.assertEqual(expected, convert.Convert())
-        
-        
-        
+
+
+
     def testAnchor(self):
         convert = rst_2_wiki.ConvertRstToWiki("""
 `my link`_
@@ -194,7 +194,7 @@ such as:
 _`my link`
 -------------------
 """)
-        
+
 
         expected = '''
 [#my link]
@@ -202,31 +202,31 @@ _`my link`
 h1. {anchor: my link}my link'''
         self.assertEqual(expected, convert.Convert())
 
-        
+
     def testContents(self):
         convert = rst_2_wiki.ConvertRstToWiki("""
 .. contents::
 """)
-        
+
 
         expected = '''
 {toc:style=circle|minLevel=1|maxLevel=5}'''
         converted = convert.Convert()
         self.assertEqual(expected, converted, "Actual: %s" % converted)
-        
+
     def testReplace(self):
         convert = rst_2_wiki.ConvertRstToWiki("""
 |repl|
 .. |repl| foo
 """)
-        
+
 
         expected = '''
 .. foo
 '''
         self.assertEqual(expected, convert.Convert())
-        
-        
+
+
     def testNoteBlock(self):
         convert = rst_2_wiki.ConvertRstToWiki('''
 .. note :: Note title
